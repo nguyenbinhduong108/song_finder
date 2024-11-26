@@ -1,11 +1,12 @@
-import 'package:flutter/material.dart';
-import 'package:song_finder/screen/sign_in.dart';
 
-class SignUp extends StatelessWidget {
-  const SignUp({super.key});
+import 'package:flutter/material.dart';
+
+class Info extends StatelessWidget{
+  const Info({super.key});
 
   @override
   Widget build(BuildContext context) {
+    // TODO: implement build
     return SafeArea(
         child: Scaffold(
           body: Center(
@@ -13,7 +14,28 @@ class SignUp extends StatelessWidget {
               children: [
                 Expanded(
                   flex: 1,
-                  child: Image.asset('lib/assets/full_logo.png'),
+                  child: Padding(
+                    padding: const EdgeInsets.all(16.0),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        IconButton(
+                            onPressed: () => {},
+                            icon: const Icon(
+                                Icons.close,
+                                size: 40,
+                            )
+                        ),
+                        IconButton(
+                            onPressed: () => {},
+                            icon: const Icon(
+                                Icons.check,
+                                size: 40,
+                            )
+                        ),
+                      ],
+                    ),
+                  ),
                 ),
                 Expanded(
                   flex: 10,
@@ -22,14 +44,24 @@ class SignUp extends StatelessWidget {
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        const Text(
-                          'Đăng ký',
-                          selectionColor: Colors.white,
-                          style: TextStyle(
-                              fontSize: 32,
-                              fontWeight: FontWeight.bold
+                        GestureDetector(
+                          onTap: () => {},
+                          child: ClipOval(
+                            child: Container(
+                              width: 200,
+                              height: 200,
+                              decoration: const BoxDecoration(
+                                image: DecorationImage(
+                                  image: NetworkImage(
+                                    "https://i.imgur.com/5DTyJjM.jpg",
+                                  ),
+                                  fit: BoxFit.cover,
+                                ),
+                              ),
+                            ),
                           ),
                         ),
+                        const SizedBox(height: 10),
                         TextField(
                           decoration: InputDecoration(
                             filled: true,
@@ -50,7 +82,7 @@ class SignUp extends StatelessWidget {
                           decoration: InputDecoration(
                             filled: true,
                             fillColor: Colors.white,
-                            hintText: 'Email',
+                            hintText: 'Mật khẩu cũ',
                             hintStyle: const TextStyle(
                               color: Colors.grey,
                               fontSize: 16,
@@ -66,7 +98,7 @@ class SignUp extends StatelessWidget {
                           decoration: InputDecoration(
                             filled: true,
                             fillColor: Colors.white,
-                            hintText: 'Mật khẩu',
+                            hintText: 'Mật khẩu mới',
                             hintStyle: const TextStyle(
                               color: Colors.grey,
                               fontSize: 16,
@@ -82,7 +114,7 @@ class SignUp extends StatelessWidget {
                           decoration: InputDecoration(
                             filled: true,
                             fillColor: Colors.white,
-                            hintText: 'Xác nhân mật khẩu',
+                            hintText: 'Xác nhận mật khẩu',
                             hintStyle: const TextStyle(
                               color: Colors.grey,
                               fontSize: 16,
@@ -94,37 +126,6 @@ class SignUp extends StatelessWidget {
                           ),
                         ),
                         const SizedBox(height: 10),
-                        ElevatedButton(
-                            style: ElevatedButton.styleFrom(backgroundColor: Colors.green),
-                            onPressed: () => {},
-                            child: const Text(
-                              'Đăng ký',
-                              style: TextStyle(
-                                  color: Colors.white,
-                                  fontWeight: FontWeight.bold
-                              ),
-                            )
-                        ),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            const Text("Đã có tài khoản, "),
-                            GestureDetector(
-                              child: const Text(
-                                'Đăng nhập',
-                                style: TextStyle(
-                                    color: Colors.yellow
-                                ),
-                              ),
-                              onTap: () => {
-                                Navigator.push(
-                                  context,
-                                  MaterialPageRoute(builder: (context) => const SignIn()),
-                                )
-                              },
-                            ),
-                          ],
-                        )
                       ],
                     ),
                   ),
