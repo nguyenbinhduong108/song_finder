@@ -1,10 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:song_finder/screen/home_page.dart';
-import 'package:song_finder/screen/info_page.dart';
-import 'package:song_finder/screen/sign_in.dart';
-import 'package:song_finder/screen/song_page.dart';
 
-void main() {
+void main() async {
+  await dotenv.load(fileName: '.env');
   runApp(const MyApp());
 }
 
@@ -19,7 +18,7 @@ class MyApp extends StatelessWidget {
         colorScheme: const ColorScheme.dark(),
         useMaterial3: true,
       ),
-      home: const SongPage(),
+      home: const HomePage(),
       debugShowCheckedModeBanner: false
     );
   }
