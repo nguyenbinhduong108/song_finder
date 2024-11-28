@@ -3,6 +3,7 @@ import 'package:song_finder/api/api.dart';
 import 'package:song_finder/screen/account_page.dart';
 import 'package:song_finder/screen/favorite_page.dart';
 import 'package:song_finder/screen/search_page.dart';
+import 'package:song_finder/screen/song_page.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -12,7 +13,7 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-  var api = Api();
+  final Api api = Api();
 
   late List<dynamic> _song = [];
   late List<dynamic> _singer = [];
@@ -100,25 +101,36 @@ class _HomePageState extends State<HomePage> {
                             itemCount: _song.length,
                             itemBuilder: (BuildContext context, int index) {
                               var song = _song[index];
+                              int songId = song['songId'];
                               return Row(
                                 children: [
-                                  Column(
-                                    children: [
-                                      Container(
-                                        width: 200,
-                                        height: 150,
-                                        decoration: BoxDecoration(
-                                          color: Colors.white,
-                                          borderRadius: BorderRadius.circular(10),
-                                          border: Border.all(color: Colors.grey),
-                                          image: DecorationImage(
-                                            image: NetworkImage(song['image']),
-                                            fit: BoxFit.cover,
+                                  GestureDetector(
+                                    onTap: () => {
+                                      Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                            builder: (context) => SongPage(songId: songId),
+                                      )
+                                      )
+                                    },
+                                    child: Column(
+                                      children: [
+                                        Container(
+                                          width: 200,
+                                          height: 150,
+                                          decoration: BoxDecoration(
+                                            color: Colors.white,
+                                            borderRadius: BorderRadius.circular(10),
+                                            border: Border.all(color: Colors.grey),
+                                            image: DecorationImage(
+                                              image: NetworkImage(song['image']),
+                                              fit: BoxFit.cover,
+                                            ),
                                           ),
                                         ),
-                                      ),
-                                      Text(song['songName']),
-                                    ],
+                                        Text(song['songName']),
+                                      ],
+                                    ),
                                   ),
                                   const SizedBox(width: 5)
                                 ],

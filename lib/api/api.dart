@@ -47,4 +47,27 @@ class Api{
       return [];
     }
   }
+
+  Future<dynamic> fetchOneSong(int songId) async{
+    try {
+      final response = await api.get('/songs/$songId');
+      return response.data;
+    }
+    catch(e){
+      print(e);
+      return [];
+    }
+  }
+
+  Future<dynamic> getMP3(String mp3) async{
+    try {
+      final dio = Dio();
+      final response = await dio.get(mp3);
+      return response.data;
+    }
+    catch(e){
+      print(e);
+      return [];
+    }
+  }
 }
