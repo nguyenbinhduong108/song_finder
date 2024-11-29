@@ -15,6 +15,29 @@ class Api{
     }
   }
 
+  Future<dynamic> fetchSongBySingerId(int singerId) async {
+    try{
+      final response = await api.get('/songs/singer/$singerId');
+      return response.data;
+    }
+    catch (e) {
+      print(e);
+      return [];
+    }
+  }
+
+  Future<dynamic> fetchSongByTypeId(int typeId) async {
+    try{
+      final response = await api.get('/songs/type/$typeId');
+      return response.data;
+    }
+    catch (e) {
+      print(e);
+      return [];
+    }
+  }
+
+
   Future<dynamic> fetchSinger() async {
     try{
       final response = await api.get('/singers');
@@ -48,21 +71,20 @@ class Api{
     }
   }
 
-  Future<dynamic> fetchOneSong(int songId) async{
-    try {
-      final response = await api.get('/songs/$songId');
+  Future<dynamic> fetchAlbumBySingerId(int singerId) async {
+    try{
+      final response = await api.get('/songs/albums/$singerId');
       return response.data;
     }
-    catch(e){
+    catch (e) {
       print(e);
       return [];
     }
   }
 
-  Future<dynamic> getMP3(String mp3) async{
+  Future<dynamic> fetchOneSong(int songId) async{
     try {
-      final dio = Dio();
-      final response = await dio.get(mp3);
+      final response = await api.get('/songs/$songId');
       return response.data;
     }
     catch(e){

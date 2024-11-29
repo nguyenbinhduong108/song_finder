@@ -3,7 +3,9 @@ import 'package:song_finder/api/api.dart';
 import 'package:song_finder/screen/account_page.dart';
 import 'package:song_finder/screen/favorite_page.dart';
 import 'package:song_finder/screen/search_page.dart';
+import 'package:song_finder/screen/singer_page.dart';
 import 'package:song_finder/screen/song_page.dart';
+import 'package:song_finder/screen/type_page.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -155,28 +157,44 @@ class _HomePageState extends State<HomePage> {
                             itemCount: _singer.length,
                             itemBuilder: (BuildContext context, int index) {
                               var singer = _singer[index];
-                              return Row(
-                                children: [
-                                  Column(
-                                    children: [
-                                      Container(
-                                        width: 150,
-                                        height: 150,
-                                        decoration: BoxDecoration(
-                                          color: Colors.white,
-                                          borderRadius: BorderRadius.circular(100),
-                                          border: Border.all(color: Colors.grey),
-                                          image: DecorationImage(
-                                            image: NetworkImage(singer['image']),
-                                            fit: BoxFit.cover,
+                              var singerId = singer['singerId'];
+                              var singerImage = singer['image'];
+                              var singerName = singer['singerName'];
+                              return GestureDetector(
+                                onTap: () => {
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                        builder: (context) => SingerPage(
+                                            singerId: singerId,
+                                            singerImage: singerImage,
+                                            singerName: singerName)
+                                    ),
+                                  )
+                                },
+                                child: Row(
+                                  children: [
+                                    Column(
+                                      children: [
+                                        Container(
+                                          width: 150,
+                                          height: 150,
+                                          decoration: BoxDecoration(
+                                            color: Colors.white,
+                                            borderRadius: BorderRadius.circular(100),
+                                            border: Border.all(color: Colors.grey),
+                                            image: DecorationImage(
+                                              image: NetworkImage(singer['image']),
+                                              fit: BoxFit.cover,
+                                            ),
                                           ),
                                         ),
-                                      ),
-                                      Text(singer['singerName']),
-                                    ],
-                                  ),
-                                  const SizedBox(width: 5)
-                                ],
+                                        Text(singer['singerName']),
+                                      ],
+                                    ),
+                                    const SizedBox(width: 5)
+                                  ],
+                                ),
                               );
                             }),
                       )
@@ -198,25 +216,36 @@ class _HomePageState extends State<HomePage> {
                             itemCount: _type.length,
                             itemBuilder: (BuildContext context, int index){
                               var type = _type[index];
+                              var typeId = type['typeId'];
+                              var typeName = type['typeName'];
                               return Row(
                                 children: [
-                                  Column(
-                                    children: [
-                                      Container(
-                                        width: 200,
-                                        height: 150,
-                                        decoration: BoxDecoration(
-                                          color: Colors.white,
-                                          borderRadius: BorderRadius.circular(10),
-                                          border: Border.all(color: Colors.grey),
-                                          image: DecorationImage(
-                                            image: NetworkImage(type['image']),
-                                            fit: BoxFit.cover,
+                                  GestureDetector(
+                                    onTap: () => {
+                                      Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                            builder: (context) => TypePage(typeId: typeId, typeName: typeName)),
+                                      )
+                                    },
+                                    child: Column(
+                                      children: [
+                                        Container(
+                                          width: 200,
+                                          height: 150,
+                                          decoration: BoxDecoration(
+                                            color: Colors.white,
+                                            borderRadius: BorderRadius.circular(10),
+                                            border: Border.all(color: Colors.grey),
+                                            image: DecorationImage(
+                                              image: NetworkImage(type['image']),
+                                              fit: BoxFit.cover,
+                                            ),
                                           ),
                                         ),
-                                      ),
-                                      Text(type['typeName']),
-                                    ],
+                                        Text(type['typeName']),
+                                      ],
+                                    ),
                                   ),
                                   const SizedBox(width: 5)
                                 ],
@@ -229,50 +258,7 @@ class _HomePageState extends State<HomePage> {
                   ),
                 ),
 
-                // Album yêu thích
-                Padding(
-                  padding: const EdgeInsets.all(16.0),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      const Text('Album yêu thích'),
-                      SizedBox(
-                        height: 170,
-                        child: ListView.builder(
-                            scrollDirection: Axis.horizontal,
-                            itemCount: _album.length,
-                            itemBuilder: (BuildContext context, int index){
-                              var album = _album[index];
-                              return Row(
-                                children: [
-                                  Column(
-                                    children: [
-                                      Container(
-                                        width: 200,
-                                        height: 150,
-                                        decoration: BoxDecoration(
-                                          color: Colors.white,
-                                          borderRadius: BorderRadius.circular(10),
-                                          border: Border.all(color: Colors.grey),
-                                          image: DecorationImage(
-                                            image: NetworkImage(album['image']),
-                                            fit: BoxFit.cover,
-                                          ),
-                                        ),
-                                      ),
-                                      Text(album['albumName']),
-                                    ],
-                                  ),
-                                  const SizedBox(width: 5)
-                                ],
-                              );
-                            }
-                        ),
-                      )
-                      ,
-                    ],
-                  ),
-                ),
+
               ],
             ),
           )
