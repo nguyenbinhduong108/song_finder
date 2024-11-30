@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:song_finder/api/api.dart';
 import 'package:song_finder/screen/account_page.dart';
+import 'package:song_finder/screen/album_page.dart';
 import 'package:song_finder/screen/favorite_page.dart';
 import 'package:song_finder/screen/search_page.dart';
 import 'package:song_finder/screen/singer_page.dart';
@@ -258,7 +259,61 @@ class _HomePageState extends State<HomePage> {
                   ),
                 ),
 
-
+                // Album yêu thích
+                Padding(
+                  padding: const EdgeInsets.all(16.0),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      const Text('Album yêu thích'),
+                      SizedBox(
+                        height: 170,
+                        child: ListView.builder(
+                            scrollDirection: Axis.horizontal,
+                            itemCount: _album.length,
+                            itemBuilder: (BuildContext context, int index){
+                              var album = _album[index];
+                              var albumId = album['albumId'];
+                              var albumName = album['albumName'];
+                              return Row(
+                                children: [
+                                  GestureDetector(
+                                    onTap: () => {
+                                      Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                            builder: (context) => AlbumPage(albumId: albumId, albumName: albumName)
+                                        ),
+                                      )
+                                    },
+                                    child: Column(
+                                      children: [
+                                        Container(
+                                          width: 200,
+                                          height: 150,
+                                          decoration: BoxDecoration(
+                                            color: Colors.white,
+                                            borderRadius: BorderRadius.circular(10),
+                                            border: Border.all(color: Colors.grey),
+                                            image: DecorationImage(
+                                              image: NetworkImage(album['image']),
+                                              fit: BoxFit.cover,
+                                            ),
+                                          ),
+                                        ),
+                                        Text(album['albumName']),
+                                      ],
+                                    ),
+                                  ),
+                                  const SizedBox(width: 5)
+                                ],
+                              );
+                            }
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
               ],
             ),
           )

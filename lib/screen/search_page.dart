@@ -190,12 +190,12 @@ class _SearchPageState extends State<SearchPage> {
                           },
                       icon: const Icon(
                         Icons.search,
-                        color: Colors.green,
+                        color: Colors.yellow,
                       )),
                   const Text(
                     'Tìm kiếm',
                     style: TextStyle(
-                      color: Colors.green,
+                      color: Colors.yellow,
                     ),
                   )
                 ],

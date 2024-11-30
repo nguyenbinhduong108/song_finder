@@ -1,4 +1,7 @@
+import 'dart:math';
+
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:song_finder/api/api.dart';
 import 'package:song_finder/screen/home_page.dart';
 import 'package:song_finder/screen/sign_up.dart';
@@ -43,7 +46,7 @@ class _SignInState extends State<SignIn> {
 
     Map<String, dynamic>? user = login(email, password);
 
-    print(user);
+    _user = user;
 
     if (user != null) {
       showDialog(
@@ -80,6 +83,11 @@ class _SignInState extends State<SignIn> {
         ),
       );
     }
+  }
+
+  Future<void> saveUserId() async {
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+    await prefs.setInt("USER_ID", _user['userId']);
   }
 
   @override
@@ -179,8 +187,9 @@ class _SignInState extends State<SignIn> {
                     ),
                     ElevatedButton(
                         style: ElevatedButton.styleFrom(backgroundColor: Colors.green),
-                        onPressed: () => {
-                          handleLogin()
+                        onPressed: () async => {
+                          handleLogin(),
+                          await saveUserId(),
                         },
                         child: const Text(
                             'Đăng nhập',

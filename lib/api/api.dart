@@ -38,6 +38,17 @@ class Api{
     }
   }
 
+  Future<dynamic> fetchSongByAlbumId(int typeId) async {
+    try{
+      final response = await api.get('/songs/album/$typeId');
+      return response.data;
+    }
+    catch (e) {
+      print(e);
+      return [];
+    }
+  }
+
   Future<dynamic> fetchOneSong(int songId) async{
     try {
       final response = await api.get('/songs/$songId');
@@ -101,6 +112,30 @@ class Api{
   Future<dynamic> fetchAllUser() async {
     try {
       final response = await api.get('/users');
+      return response.data;
+    }
+    catch (e) {
+      print(e);
+      return [];
+    }
+  }
+
+  // Favorite
+  Future<dynamic> fetchFavorite() async {
+    try{
+      final response = await api.get('/songs');
+      return response.data;
+    }
+    catch (e) {
+      print(e);
+      return [];
+    }
+  }
+
+  // PlayList
+  Future<dynamic> fetchPlayList() async {
+    try{
+      final response = await api.get('/songs/albums');
       return response.data;
     }
     catch (e) {

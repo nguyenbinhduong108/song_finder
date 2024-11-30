@@ -77,13 +77,13 @@ class AccountPage extends StatelessWidget{
                           },
                           icon: const Icon(
                               Icons.account_circle_outlined,
-                            color: Colors.green,
+                            color: Colors.blue,
                           )
                       ),
                       const Text(
                           'Tôi',
                         style: TextStyle(
-                          color: Colors.green,
+                          color: Colors.blue,
                         ),
                       )
                     ],
