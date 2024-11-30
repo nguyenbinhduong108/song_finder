@@ -4,6 +4,7 @@ import 'package:flutter_dotenv/flutter_dotenv.dart';
 class Api{
   var api = Dio(BaseOptions(baseUrl: dotenv.env['API_KEY'] as String));
 
+  // Songs
   Future<dynamic> fetchSong() async {
     try{
       final response = await api.get('/songs');
@@ -37,7 +38,19 @@ class Api{
     }
   }
 
+  Future<dynamic> fetchOneSong(int songId) async{
+    try {
+      final response = await api.get('/songs/$songId');
+      return response.data;
+    }
+    catch(e){
+      print(e);
+      return [];
+    }
+  }
 
+
+  // Singer
   Future<dynamic> fetchSinger() async {
     try{
       final response = await api.get('/singers');
@@ -49,6 +62,7 @@ class Api{
     }
   }
 
+  // Type
   Future<dynamic> fetchType() async {
     try{
       final response = await api.get('/songs/type');
@@ -60,6 +74,7 @@ class Api{
     }
   }
 
+  // Album
   Future<dynamic> fetchAlbum() async {
     try{
       final response = await api.get('/songs/albums');
@@ -82,12 +97,13 @@ class Api{
     }
   }
 
-  Future<dynamic> fetchOneSong(int songId) async{
+  // User
+  Future<dynamic> fetchAllUser() async {
     try {
-      final response = await api.get('/songs/$songId');
+      final response = await api.get('/users');
       return response.data;
     }
-    catch(e){
+    catch (e) {
       print(e);
       return [];
     }
