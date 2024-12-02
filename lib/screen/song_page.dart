@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:audioplayers/audioplayers.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:song_finder/api/api.dart';
 import 'package:song_finder/screen/home_page.dart';
 import 'package:song_finder/ultis/format.dart';
@@ -25,16 +26,48 @@ class _SongPageState extends State<SongPage> {
   late dynamic _song = {};
 
   bool isPlay = false;
+  bool isFavorite = false;
 
   late double duration = 0;
   late double position = 0;
   late Timer _timer;
+
+  Future<dynamic> latestListenTime(int songId) async {
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+    final userId = prefs.getInt('USER_ID');
+    final data = await api.checkHistory(userId!, songId);
+    final favorite = await api.checkFavorite(userId!, songId);
+    setState(() {
+      isFavorite = favorite;
+    });
+
+    if(data){
+      await api.updateLatestListenTime(userId, songId, DateTime.now().toString(), favorite);
+    }
+    else{
+      await api.addLatestListenTime(userId, songId, DateTime.now().toString());
+    }
+  }
 
   Future<void> fetchOneSong() async{
     final data = await api.fetchOneSong(widget.songId);
     setState(() {
       _song = data;
       duration = format.formatDurationToInt(_song["duration"] as String);
+    });
+
+    await latestListenTime(_song['songId']);
+  }
+
+  Future<dynamic> updateFavorite(int songId) async {
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+    final userId = prefs.getInt('USER_ID');
+    await api.updateFavorite(userId!, songId, DateTime.now().toString(), !isFavorite);
+
+    final response = await api.checkFavorite(userId!, songId);
+
+    setState(() {
+      isFavorite = response;
     });
   }
 
@@ -187,11 +220,13 @@ class _SongPageState extends State<SongPage> {
                         )
                     ),
                     IconButton(
-                        onPressed: () => {
+                        onPressed: () async => {
+                          await updateFavorite(_song['songId'])
                         },
-                        icon: const Icon(
+                        icon: Icon(
                           Icons.favorite,
                           size: 24,
+                          color: isFavorite ? Colors.pink : Colors.white,
                         )
                     ),
                   ],

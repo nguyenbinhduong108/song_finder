@@ -132,6 +132,75 @@ class Api{
     }
   }
 
+  Future<dynamic> checkFavorite(int userId, int songId) async{
+    try{
+      final response = await api.get('/check-favorite/$userId/$songId');
+      return response.data;
+    }
+    catch (e) {
+      print(e);
+      return [];
+    }
+  }
+
+  Future<dynamic> updateLatestListenTime(int userId, int songId, String latestListenTime, bool favorite) async {
+    try{
+      final response = await api.put('/favorite/put/$userId/$songId', data: {
+        'songId': null,
+        'userId': null,
+        'latestListenTime': latestListenTime,
+        'isFavorite': favorite,
+      });
+      return response.data;
+    }
+    catch (e) {
+      print(e);
+      return [];
+    }
+  }
+
+  Future<dynamic> addLatestListenTime(int userId, int songId, String latestListenTime) async {
+    try{
+      final response = await api.post('/history-listen/post', data: {
+        'songId': songId,
+        'userId': userId,
+        'latestListenTime': latestListenTime,
+        'isFavorite': false,
+      });
+      return response.data;
+    }
+    catch (e) {
+      print(e);
+      return [];
+    }
+  }
+
+  Future<dynamic> updateFavorite(int userId, int songId, String latestListenTime, bool isFavorite) async{
+    try{
+      final response = await api.put('/favorite/put/$userId/$songId', data: {
+        'latestListenTime': latestListenTime,
+        'isFavorite': isFavorite,
+      });
+      return response.data;
+    }
+    catch (e) {
+      print(e);
+      return [];
+    }
+  }
+
+  // History
+  Future<dynamic> checkHistory(int userId, int songId) async{
+    try{
+      final response = await api.get('/check-history-listen/$userId/$songId');
+      return response.data;
+    }
+    catch (e) {
+      print(e);
+      return [];
+    }
+  }
+
   // PlayList
   Future<dynamic> fetchPlayList(int userId) async {
     try{
