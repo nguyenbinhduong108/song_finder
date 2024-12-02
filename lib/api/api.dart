@@ -121,9 +121,9 @@ class Api{
   }
 
   // Favorite
-  Future<dynamic> fetchFavorite() async {
+  Future<dynamic> fetchFavorite(int userId) async {
     try{
-      final response = await api.get('/songs');
+      final response = await api.get('/favorite/$userId');
       return response.data;
     }
     catch (e) {
@@ -133,9 +133,9 @@ class Api{
   }
 
   // PlayList
-  Future<dynamic> fetchPlayList() async {
+  Future<dynamic> fetchPlayList(int userId) async {
     try{
-      final response = await api.get('/songs/albums');
+      final response = await api.get('/users/playlist/$userId');
       return response.data;
     }
     catch (e) {

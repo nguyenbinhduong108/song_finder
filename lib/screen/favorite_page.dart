@@ -1,6 +1,7 @@
 import 'dart:ffi';
 
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:song_finder/api/api.dart';
 import 'package:song_finder/screen/search_page.dart';
 import 'package:song_finder/screen/song_page.dart';
@@ -23,7 +24,9 @@ class _FavoritePageState extends State<FavoritePage> {
   late List<dynamic> _playList = [];
 
   Future<void> fetchFavorite() async {
-    final data = await api.fetchFavorite();
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+    final userId = prefs.getInt('USER_ID');
+    final data = await api.fetchFavorite(userId!);
 
     setState(() {
       _favoriteSong = data;
@@ -31,7 +34,9 @@ class _FavoritePageState extends State<FavoritePage> {
   }
 
   Future<void> fetchPlayList() async {
-    final data = await api.fetchPlayList();
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+    final userId = prefs.getInt('USER_ID');
+    final data = await api.fetchPlayList(userId!);
 
     setState(() {
       _playList = data;
@@ -226,7 +231,7 @@ class _FavoritePageState extends State<FavoritePage> {
                                                 borderRadius: BorderRadius.circular(10),
                                                 border: Border.all(color: Colors.grey),
                                                 image: DecorationImage(
-                                                  image: NetworkImage(song['image']),
+                                                  image: NetworkImage(song['user']['image']),
                                                   fit: BoxFit.cover,
                                                 ),
                                               ),
@@ -235,7 +240,7 @@ class _FavoritePageState extends State<FavoritePage> {
                                             SizedBox(
                                               width: MediaQuery.of(context).size.width * 0.5,
                                               child: Text(
-                                                song['albumName'],
+                                                song['playlistName'],
                                                 overflow: TextOverflow.ellipsis,
                                                 maxLines: 1,
                                                 style: const TextStyle(
