@@ -1,5 +1,6 @@
 import 'package:dio/dio.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class Api{
   var api = Dio(BaseOptions(baseUrl: dotenv.env['API_KEY'] as String));
@@ -210,6 +211,35 @@ class Api{
     catch (e) {
       print(e);
       return [];
+    }
+  }
+  
+  Future<dynamic> addPlayList(String playListName) async {
+    try{
+      final SharedPreferences prefs = await SharedPreferences.getInstance();
+      final userId = prefs.getInt('USER_ID');
+      final response = await api.post('/users/playlist/post', data: {
+        'playlistName': playListName,
+        'dateCreated': DateTime.now().toString(),
+        'user': {
+          'userId': userId!
+        }
+      });
+
+      return response.data;
+    }
+    catch (e) {
+      print(e);
+      return [];
+    }
+  }
+
+  Future<void> deletePlayList(int playListId) async {
+    try{
+      await api.delete('/users/playlist/delete/$playListId');
+    }
+    catch (e) {
+      print(e);
     }
   }
 }

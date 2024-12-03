@@ -23,6 +23,9 @@ class _FavoritePageState extends State<FavoritePage> {
   late List<dynamic> _favoriteSong = [];
   late List<dynamic> _playList = [];
 
+  final TextEditingController _textController = TextEditingController();
+
+
   Future<void> fetchFavorite() async {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
     final userId = prefs.getInt('USER_ID');
@@ -41,8 +44,51 @@ class _FavoritePageState extends State<FavoritePage> {
     setState(() {
       _playList = data;
     });
+  }
 
-    print(_playList);
+  Future<void> addPlayList(String playListName) async {
+    await api.addPlayList(playListName);
+    await fetchPlayList();
+  }
+
+  Future<void> deletePlayList(int playListId, String playListName) async {
+    showDialog(
+        context: context,
+        builder: (context) => AlertDialog(
+          title: Text.rich(
+            TextSpan(
+              text: 'Bạn có chắc muốn xoá danh sách phát ',
+              children: [
+                TextSpan(
+                  text: playListName,
+                  style: const TextStyle(
+                    color: Colors.red,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+                const TextSpan(
+                  text: ' không?',
+                ),
+              ],
+            ),
+          ),
+          actions: [
+            ElevatedButton(
+                onPressed: () => Navigator.pop(context),
+                child: const Text('Huỷ')
+            ),
+            ElevatedButton(
+              onPressed: () async {
+                Navigator.pop(context);
+                await api.deletePlayList(playListId);
+                await fetchPlayList();
+              },
+              child: const Text('Xoá'),
+            )
+          ],
+        )
+    );
+
   }
 
   void createPlayList() {
@@ -52,6 +98,7 @@ class _FavoritePageState extends State<FavoritePage> {
           title: const Text("Danh sách phát"),
           content: SizedBox(
             child: TextField(
+              controller: _textController,
               style: const TextStyle(
                 color: Colors.black,
                 fontSize: 16,
@@ -77,7 +124,14 @@ class _FavoritePageState extends State<FavoritePage> {
                 child: const Text('Huỷ')
             ),
             ElevatedButton(
-                onPressed: () => {},
+                onPressed: () async {
+                  final playListName = _textController.text.trim();
+                  if(playListName.isNotEmpty){
+                    addPlayList(playListName);
+                    Navigator.pop(context);
+                    _textController.clear();
+                  }
+                },
                 child: const Text('Tạo'),
             )
           ],
@@ -216,7 +270,7 @@ class _FavoritePageState extends State<FavoritePage> {
                             child: ListView.builder(
                                 itemCount: _playList.length,
                                 itemBuilder: (BuildContext context, int index){
-                                  var song = _playList[index];
+                                  var playlist = _playList[index];
                                   return Column(
                                     children: [
                                       GestureDetector(
@@ -231,7 +285,7 @@ class _FavoritePageState extends State<FavoritePage> {
                                                 borderRadius: BorderRadius.circular(10),
                                                 border: Border.all(color: Colors.grey),
                                                 image: DecorationImage(
-                                                  image: NetworkImage(song['user']['image']),
+                                                  image: NetworkImage(playlist['user']['image']),
                                                   fit: BoxFit.cover,
                                                 ),
                                               ),
@@ -240,7 +294,7 @@ class _FavoritePageState extends State<FavoritePage> {
                                             SizedBox(
                                               width: MediaQuery.of(context).size.width * 0.5,
                                               child: Text(
-                                                song['playlistName'],
+                                                playlist['playlistName'],
                                                 overflow: TextOverflow.ellipsis,
                                                 maxLines: 1,
                                                 style: const TextStyle(
@@ -249,7 +303,10 @@ class _FavoritePageState extends State<FavoritePage> {
                                               ),
                                             ),
                                              IconButton(
-                                                 onPressed: () => {},
+                                                 onPressed: () async {
+                                                     await deletePlayList(playlist['playlistId'], playlist['playlistName']);
+
+                                                 },
                                                  icon: const Icon(Icons.delete)
                                              )
 
