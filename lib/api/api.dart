@@ -5,6 +5,29 @@ import 'package:shared_preferences/shared_preferences.dart';
 class Api{
   var api = Dio(BaseOptions(baseUrl: dotenv.env['API_KEY'] as String));
 
+  // User
+  Future<dynamic> fetchAllUser() async {
+    try {
+      final response = await api.get('/users');
+      return response.data;
+    }
+    catch (e) {
+      print(e);
+      return [];
+    }
+  }
+
+  Future<dynamic> fetchUser(int userId) async {
+    try {
+      final response = await api.get('/users/$userId');
+      return response.data;
+    }
+    catch (e) {
+      print(e);
+      return [];
+    }
+  }
+
   // Songs
   Future<dynamic> fetchSong() async {
     try{
@@ -109,18 +132,6 @@ class Api{
     }
   }
 
-  // User
-  Future<dynamic> fetchAllUser() async {
-    try {
-      final response = await api.get('/users');
-      return response.data;
-    }
-    catch (e) {
-      print(e);
-      return [];
-    }
-  }
-
   // Favorite
   Future<dynamic> fetchFavorite(int userId) async {
     try{
@@ -194,6 +205,20 @@ class Api{
   Future<dynamic> checkHistory(int userId, int songId) async{
     try{
       final response = await api.get('/check-history-listen/$userId/$songId');
+      return response.data;
+    }
+    catch (e) {
+      print(e);
+      return [];
+    }
+  }
+
+  Future<dynamic> fetchHistory() async {
+    try{
+      final SharedPreferences prefs = await SharedPreferences.getInstance();
+      final userId = prefs.getInt('USER_ID');
+      final response = await api.get('/history-listen/$userId');
+      
       return response.data;
     }
     catch (e) {

@@ -6,7 +6,6 @@ class Info extends StatelessWidget{
 
   @override
   Widget build(BuildContext context) {
-    // TODO: implement build
     return SafeArea(
         child: Scaffold(
           body: Center(
@@ -20,7 +19,9 @@ class Info extends StatelessWidget{
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         IconButton(
-                            onPressed: () => {},
+                            onPressed: () => {
+                              Navigator.pop(context),
+                            },
                             icon: const Icon(
                                 Icons.close,
                                 size: 40,
