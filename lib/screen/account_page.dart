@@ -63,7 +63,7 @@ class _AccountPageState extends State<AccountPage> {
                       )
                   );
                 },
-                child: const Text('Huỷ'),
+                child: const Text('Đăng xuất'),
             )
           ],
         )
@@ -148,7 +148,9 @@ class _AccountPageState extends State<AccountPage> {
                           Row(
                             children: [
                               ElevatedButton(
-                                onPressed: () => {},
+                                onPressed: () => {
+                                  logout()
+                                },
                                 style: ElevatedButton.styleFrom(
                                     backgroundColor: Colors.green
                                 ),
