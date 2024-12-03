@@ -3,6 +3,7 @@ import 'dart:ffi';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:song_finder/api/api.dart';
+import 'package:song_finder/screen/playlistsong_page.dart';
 import 'package:song_finder/screen/search_page.dart';
 import 'package:song_finder/screen/song_page.dart';
 
@@ -274,7 +275,14 @@ class _FavoritePageState extends State<FavoritePage> {
                                   return Column(
                                     children: [
                                       GestureDetector(
-                                        onTap: () => {},
+                                        onTap: () => {
+                                          Navigator.push(
+                                            context,  
+                                            MaterialPageRoute(
+                                                builder: (context) => PlaylistSong(playlistId: playlist['playlistId'], playlistName: playlist['playlistName'],)
+                                            )
+                                          )
+                                        },
                                         child: Row(
                                           children: [
                                             Container(

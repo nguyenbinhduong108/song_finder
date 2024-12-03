@@ -267,4 +267,17 @@ class Api{
       print(e);
     }
   }
+
+  // PlayListSong
+  Future<dynamic> fetchPlaylistSong(int playlistId) async {
+    try{
+      final response = await api.get('/users/playlist-song/$playlistId');
+
+      return response.data;
+    }
+    catch (e) {
+      print(e);
+      return [];
+    }
+  }
 }
