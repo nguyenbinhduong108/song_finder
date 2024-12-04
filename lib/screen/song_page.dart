@@ -36,7 +36,7 @@ class _SongPageState extends State<SongPage> {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
     final userId = prefs.getInt('USER_ID');
     final data = await api.checkHistory(userId!, songId);
-    final favorite = await api.checkFavorite(userId!, songId);
+    final favorite = await api.checkFavorite(userId, songId);
     setState(() {
       isFavorite = favorite;
     });
@@ -64,7 +64,7 @@ class _SongPageState extends State<SongPage> {
     final userId = prefs.getInt('USER_ID');
     await api.updateFavorite(userId!, songId, DateTime.now().toString(), !isFavorite);
 
-    final response = await api.checkFavorite(userId!, songId);
+    final response = await api.checkFavorite(userId, songId);
 
     setState(() {
       isFavorite = response;

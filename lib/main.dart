@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
-import 'package:song_finder/screen/home_page.dart';
 import 'package:song_finder/screen/sign_in.dart';
 
 void main() async {

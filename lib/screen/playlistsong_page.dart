@@ -1,6 +1,8 @@
 
 import 'package:flutter/material.dart';
 import 'package:song_finder/api/api.dart';
+import 'package:song_finder/screen/add_playlist_song.dart';
+import 'package:song_finder/screen/favorite_page.dart';
 import 'package:song_finder/screen/song_page.dart';
 
 class PlaylistSong extends StatefulWidget {
@@ -19,6 +21,54 @@ class _PlaylistSongState extends State<PlaylistSong> {
   final Api api = Api();
 
   late List<dynamic> _playlistSong = [];
+  late String playlistName = '';
+
+  final TextEditingController _textController = TextEditingController();
+
+
+  Future<void> deletePlayList(int playListId, String playListName) async {
+    showDialog(
+        context: context,
+        builder: (context) => AlertDialog(
+          title: Text.rich(
+            TextSpan(
+              text: 'Bạn có chắc muốn xoá danh sách phát ',
+              children: [
+                TextSpan(
+                  text: playListName,
+                  style: const TextStyle(
+                    color: Colors.red,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+                const TextSpan(
+                  text: ' không?',
+                ),
+              ],
+            ),
+          ),
+          actions: [
+            ElevatedButton(
+                onPressed: () => Navigator.pop(context),
+                child: const Text('Huỷ')
+            ),
+            ElevatedButton(
+              onPressed: () async {
+                await api.deletePlayList(playListId);
+                Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => const FavoritePage()
+                    )
+                );
+              },
+              child: const Text('Xoá'),
+            )
+          ],
+        )
+    );
+
+  }
 
   Future<void> fetchPlaylistSong() async {
     final data = await api.fetchPlaylistSong(widget.playlistId);
@@ -28,10 +78,78 @@ class _PlaylistSongState extends State<PlaylistSong> {
     });
   }
 
+  Future<void> deletePlaylistSong(int playlistId, int songId) async {
+    await api.deletePlaylistSong(playlistId, songId);
+    await fetchPlaylistSong();
+  }
+
+  Future<void> editPlayList() async {
+    showDialog(
+        context: context,
+        builder: (context) => AlertDialog(
+          title: const Text("Chỉnh sửa"),
+          content: SizedBox(
+            child: TextField(
+              controller: _textController,
+              style: const TextStyle(
+                color: Colors.black,
+                fontSize: 16,
+              ),
+              decoration: InputDecoration(
+                filled: true,
+                fillColor: Colors.white,
+                hintText: 'Tên danh sách phát',
+                hintStyle: const TextStyle(
+                  color: Colors.grey,
+                  fontSize: 16,
+                ),
+                border: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(8),
+                  borderSide: BorderSide.none,
+                ),
+              ),
+            ),
+          ),
+          actions: [
+            ElevatedButton(
+                onPressed: () {
+                  _textController.clear();
+                  Navigator.pop(context);
+                },
+                child: const Text('Huỷ')
+            ),
+            ElevatedButton(
+              onPressed: () async {
+                final playListName = _textController.text.trim();
+                if(playListName.isNotEmpty){
+                  updatePlayList(playListName);
+                  Navigator.pop(context);
+                  _textController.clear();
+                }
+              },
+              child: const Text('Cập nhật'),
+            )
+          ],
+        )
+    );
+  }
+
+  Future<void> updatePlayList(String playListName) async {
+    await api.updatePlayList(widget.playlistId, playListName);
+    await fetchPlaylistSong();
+    
+    setState(() {
+      playlistName = playListName;
+    });
+  }
+
   @override
   void initState() {
     super.initState();
     fetchPlaylistSong();
+    setState(() {
+      playlistName = widget.playlistName;
+    });
   }
 
   @override
@@ -55,7 +173,12 @@ class _PlaylistSongState extends State<PlaylistSong> {
                     children: [
                       IconButton(
                           onPressed: () => {
-                            Navigator.pop(context),
+                            Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) => const FavoritePage()
+                                )
+                            )
                           },
                           icon: const Icon(
                             Icons.navigate_before,
@@ -63,7 +186,9 @@ class _PlaylistSongState extends State<PlaylistSong> {
                           )
                       ),
                       IconButton(
-                          onPressed: () => {},
+                          onPressed: () async {
+                            await deletePlayList(widget.playlistId, playlistName);
+                          },
                           icon: const Icon(
                             Icons.delete,
                             size: 32,
@@ -79,7 +204,7 @@ class _PlaylistSongState extends State<PlaylistSong> {
                         Row(
                           children: [
                             Text(
-                              widget.playlistName,
+                              playlistName,
                               style: const TextStyle(
                                   color: Colors.white,
                                   fontSize: 20,
@@ -87,13 +212,22 @@ class _PlaylistSongState extends State<PlaylistSong> {
                               ),
                             ),
                             IconButton(
-                                onPressed: () => {},
+                                onPressed: () async {
+                                  await editPlayList();
+                                },
                                 icon: const Icon(Icons.edit)
                             )
                           ],
                         ),
                         ElevatedButton(
-                            onPressed: () => {},
+                            onPressed: () => {
+                              Navigator.push(
+                                  context, 
+                                  MaterialPageRoute(
+                                      builder: (context) => AddPlaylistSong(playlistId: widget.playlistId, playlistName: playlistName,)
+                                  )
+                              )
+                            },
                             style: ElevatedButton.styleFrom(
                               backgroundColor: Colors.green,
                             ),
@@ -169,7 +303,9 @@ class _PlaylistSongState extends State<PlaylistSong> {
                                             ],
                                           ),
                                           IconButton(
-                                            onPressed: () => {},
+                                            onPressed: () async {
+                                              await deletePlaylistSong(widget.playlistId, songId);
+                                            },
                                             icon: const Icon(Icons.delete)
                                           )
                                         ],

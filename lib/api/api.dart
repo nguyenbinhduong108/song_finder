@@ -268,11 +268,64 @@ class Api{
     }
   }
 
+  Future<dynamic> updatePlayList(int playListId,String playListName) async {
+    try{
+      final SharedPreferences prefs = await SharedPreferences.getInstance();
+      final userId = prefs.getInt('USER_ID');
+      final response = await api.put('/users/playlist/put/$playListId', data: {
+        "playlistName": playListName,
+        "dateCreated": DateTime.now().toString(),
+        "user": {
+          "userId": userId!
+        }
+      });
+      return response.data;
+    }
+    catch (e) {
+      print(e);
+      return [];
+    }
+  }
+
   // PlayListSong
   Future<dynamic> fetchPlaylistSong(int playlistId) async {
     try{
       final response = await api.get('/users/playlist-song/$playlistId');
 
+      return response.data;
+    }
+    catch (e) {
+      print(e);
+      return [];
+    }
+  }
+
+  Future<void> deletePlaylistSong(int playlistId, int songId) async {
+    try{
+      await api.delete('/users/playlist-song/delete/$playlistId/$songId');
+    }
+    catch (e) {
+      print(e);
+    }
+  }
+  
+  Future<dynamic> checkPlaylistSong(int playlistId, int songId) async {
+    try{
+      final response = await api.get('/users/playlist-song/check-playlist-song/$playlistId/$songId');
+      return response.data;
+    }
+    catch (e) {
+      print(e);
+      return [];
+    }
+  }
+
+  Future<dynamic> addPlaylistSong(int playlistId, int songId) async {
+    try{
+      final response = await api.post('/users/playlist-song/post', data: {
+        "songId": songId,
+        "playlistId": playlistId
+      });
       return response.data;
     }
     catch (e) {
