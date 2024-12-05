@@ -87,7 +87,10 @@ class _HomePageState extends State<HomePage> {
                 Container(
                   height: 200,
                   color: Colors.blue,
-                  child: const Center(child: Text('Nội dung 1')),
+                  child: Image.asset(
+                      'lib/assets/5705739.jpg',
+                    fit: BoxFit.cover,
+                  ),
                 ),
 
                 // Bài hát yêu thích

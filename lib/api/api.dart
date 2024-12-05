@@ -6,6 +6,24 @@ class Api{
   var api = Dio(BaseOptions(baseUrl: dotenv.env['API_KEY'] as String));
 
   // User
+  Future<dynamic> singUp(String userName, String email,String password) async {
+    try{
+      final response = await api.post('/users/post', data: {
+        "userName": userName,
+        "email": email,
+        "password": password,
+        "role": "",
+        "image": "https://i.imgur.com/t9Y4WFN.jpg"
+      });
+
+      return response.data;
+    }
+    catch (e) {
+      print(e);
+      return [];
+    }
+  }
+
   Future<dynamic> fetchAllUser() async {
     try {
       final response = await api.get('/users');
@@ -20,6 +38,26 @@ class Api{
   Future<dynamic> fetchUser(int userId) async {
     try {
       final response = await api.get('/users/$userId');
+      return response.data;
+    }
+    catch (e) {
+      print(e);
+      return [];
+    }
+  }
+
+  Future<dynamic> updateUser(String userName, String password, String role, String image) async{
+    try{
+      final SharedPreferences prefs = await SharedPreferences.getInstance();
+      final userId = prefs.getInt('USER_ID');
+      final response = await api.put('/users/put/$userId', data: {
+        "userName": userName,
+        "email": "",
+        "password": password,
+        "role": role,
+        "image": image
+      });
+
       return response.data;
     }
     catch (e) {
